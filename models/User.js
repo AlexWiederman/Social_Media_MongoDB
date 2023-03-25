@@ -16,11 +16,6 @@ const userSchema = new Schema(
       unique: true,
       match: [/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/, 'Please fill a valid email address']
     },
-    github: {
-      type: String,
-      required: true,
-      max_length: 50,
-    },
     thoughts: [
       {
         type: Schema.Types.ObjectId,
