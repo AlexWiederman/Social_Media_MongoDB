@@ -73,9 +73,10 @@ module.exports = {
     
       Thought.findOneAndUpdate(
         { _id: req.body.thoughtID },
-        { $set: { "Thought.reactions": reaction._id}},
+        { $set: { "Thought.reactionsBody": req.body.reactionBody}},
         { runValidators: true, new: true }
       )
+      .then(() => res.json({ message: "Reaction Created!" }))
       
       .catch((err) => {
         console.log(err);
