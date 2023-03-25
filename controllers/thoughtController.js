@@ -70,22 +70,21 @@ module.exports = {
   },
   // Create a reaction to a thought
   createReaction(req, res) {
-    Reaction.create(req.body)
-      .then((reaction) => 
+    
       Thought.findOneAndUpdate(
         { _id: req.body.thoughtID },
         { $set: { "Thought.reactions": reaction._id}},
         { runValidators: true, new: true }
       )
-      )
+      
       .catch((err) => {
         console.log(err);
         return res.status(500).json(err);
       });
-  },
+    },
   // Delete a reaction to a thought
   deleteReaction(req, res) {
-    Reaction.findOneAndDelete({ _id: req.params.thoughtId })
+    Thought.findOneAndDelete({ _id: req.params.thoughtId })
       // .then((thought) =>
       //   !thought
       //     ? res.status(404).json({ message: 'No thought with that ID' })
@@ -93,5 +92,5 @@ module.exports = {
       // )
       .then(() => res.json({ message: "Reaction deleted!" }))
       .catch((err) => res.status(500).json(err));
-  },
+  }
 };
