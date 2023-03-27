@@ -22,20 +22,20 @@ module.exports = {
   createThought(req, res) {
     Thought.create(req.body)
       // .then((thought) => res.json(thought)
-      .then((thought) => 
-      
-      User.findOneAndUpdate(
-        { _id: req.body.userID },
-        { $set: { thoughts: thought._id}},
-        { runValidators: true, new: true }
-      )
-      .then((user) =>
-        !user
-          ? res
-              .status(404)
-              .json({ message: `No user found with that ID ${req.body.userId}` })
-          : res.json(user)
-      )
+      .then((thought) =>
+        User.findOneAndUpdate(
+          { _id: req.body.userID },
+          { $set: { thoughts: thought._id } },
+          { runValidators: true, new: true }
+        ).then((user) =>
+          !user
+            ? res
+                .status(404)
+                .json({
+                  message: `No user found with that ID ${req.body.userId}`,
+                })
+            : res.json(user)
+        )
       )
 
       .catch((err) => {
@@ -70,34 +70,33 @@ module.exports = {
   },
   // Create a reaction to a thought
   createReaction(req, res) {
-    
-      Thought.findOneAndUpdate(
-        { _id: req.params.thoughtId },
-        { $addToSet: { reactions: req.body}},
-        { runValidators: true, new: true }
-      )
+    Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $addToSet: { reactions: req.body } },
+      { runValidators: true, new: true }
+    )
       .then(() => res.json({ message: "Reaction Created!" }))
-      
+
       .catch((err) => {
         console.log(err);
         return res.status(500).json(err);
       });
-    },
+  },
   // Delete a reaction to a thought
   deleteReaction(req, res) {
     Thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
-        { $pull: { reactions: { _id: req.params.reactionId }}},
-        { runValidators: true, new: true }
+      { $pull: { reactions: { reactionId: req.params.reactionId } } },
+      { runValidators: true, new: true }
     )
-      .then((thought) => 
-      !thought
+      .then((thought) =>
+        !thought
           ? res.status(404).json({
               message: thought,
             })
-          : res.json({ message:  thought})
+          : res.json({ message: thought })
       )
       // res.json({ message: "Reaction deleted!" }))
       .catch((err) => res.status(500).json(err));
-  }
+  },
 };
